@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Mural Especial💝</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Configurações Gerais e Cores */
+        :root {
+            --cor-fundo: #1a1a1a; 
+            --cor-texto: #e0e0e0; 
+            --cor-principal: #ff758c; 
+            --cor-secundaria: #ff7eb3; 
+            
+            /* Variáveis dinâmicas controladas pelo JS */
+            --escala-base: 1;
+            --intensidade-brilho: 0;
+            --progresso-barra: 0%; /* Controla o preenchimento rosa da barra */
+            --altura-viewport: 100dvh;
+            --largura-viewport: 100vw;
+            --altura-mural: 68dvh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            line-height: 1.6;
+            overflow-x: hidden;
+            opacity: 0;
+            animation: fadeEntrada 3s ease forwards;
+        }
+
+        @keyframes fadeEntrada {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- Carrossel de Imagens no TOPO --- */
+        .mural-wrapper {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            background: #2d2d2d; 
+            z-index: 1;
+        }
+
+        .carrossel-mural {
+            display: flex;
+            width: max-content;
+            height: 100%;
+            animation: correrCarrossel 50s linear infinite;
+        }
+
+        .carrossel-mural img {
+            height: 100%;
+            width: 340px;
+            flex: 0 0 auto;
+            object-fit: cover;
+        }
+
+        /* Cabeçalho Flutuante */
+        header {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(200, 70, 90, 0.98), rgba(200, 80, 130, 0.98));
+            color: white; 
+            text-align: center;
+            width: fit-content;
+            max-width: 90%;
+            padding: 30px 40px;
+            border-radius: 15px; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
+            z-index: 10;
+        }
+
+        header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.05rem;
+            opacity: 0.95;
+        }
+
+        .overlay-gradiente {
+            position: absolute;
+            inset: -8px;
+            width: auto;
+            height: auto;
+            background: linear-gradient(to bottom, transparent 20%, rgba(26, 26, 26, 0.8) 70%, var(--cor-fundo) 100%);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            transform: translateZ(0);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes correrCarrossel {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- SEÇÕES --- */
+        .secao-mural {
+            min-height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 20px; 
+            position: relative;
+        }
+
+        .conteudo-secao {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .conteudo-secao.secao-historia-layout {
+            max-width: 1250px;
+        }
+
+        .conteudo-secao h2,
+        .conteudo-secao .texto-corpo {
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .conteudo-secao.viver-esquerda h2 { transform: translateX(-80px); }
+        .conteudo-secao.viver-direita h2 { transform: translateX(80px); }
+        .conteudo-secao .texto-corpo { transform: translateY(40px); }
+
+        .conteudo-secao.titulo-visivel h2 { opacity: 1; transform: translateX(0); }
+        .conteudo-secao.corpo-visivel .texto-corpo { opacity: 1; transform: translateY(0); }
+
+        .conteudo-secao h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: var(--cor-principal);
+            font-size: 3.2rem; 
+            margin-bottom: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            letter-spacing: -1px;
+        }
+
+        /* --- BOTÃO SETA PARA BAIXO (BOLA ROSA) --- */
+        .seta-rolar-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            opacity: 0;
+            animation: subirSeta 1s ease-out 1.2s forwards;
+        }
+
+        .btn-seta-rolar {
+            width: 46px;
+            height: 46px;
+            background-color: var(--cor-principal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 117, 140, 0.4);
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            animation: flutuarSeta 2s ease-in-out infinite;
+        }
+
+        .btn-seta-rolar:hover {
+            background-color: var(--cor-secundaria);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 126, 179, 0.6);
+        }
+
+        .btn-seta-rolar svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes flutuarSeta {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes subirSeta {
+            to { opacity: 1; }
+        }
+
+        /* --- ANIMAÇÃO FLUTUANTE --- */
+        @keyframes flutuar {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .foto-flutuante {
+            animation: flutuar 4s ease-in-out infinite;
+        }
+
+        .foto-delay-1 { animation-delay: 0s; }
+        .foto-delay-2 { animation-delay: 0.4s; }
+        .foto-delay-3 { animation-delay: 0.8s; }
+
+        /* --- SEÇÃO NOSSA HISTÓRIA --- */
+        .conteudo-historia {
+            position: relative;
+            width: 100%;
+            height: 550px;
+            margin-top: 50px;
+        }
+
+        .bloco-ano {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 60px; 
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+        }
+
+        .bloco-ano.ativo {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0) !important;
+            pointer-events: auto;
+        }
+
+        .foto-historia-wrapper {
+            flex: 0 0 480px;
+            height: 480px;
+            width: 480px;
+            aspect-ratio: 1 / 1; 
+        }
+
+        .grid-fotos-2025 {
+            flex: 0 0 580px; 
+            height: 480px;
+            width: 580px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            align-items: center;
+            gap: 15px;
+        }
+
+        .grid-fotos-2025 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            aspect-ratio: 1 / 1; 
+        }
+
+        .foto-historia-wrapper img, 
+        .grid-fotos-2025 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            border-radius: 12px;
+            border: 3px solid var(--cor-principal);
+            box-shadow: 0 0 18px rgba(255, 117, 140, 0.55);
+        }
+
+        #ano-0 .foto-historia-wrapper {
+            flex: 0 0 360px;
+            width: 360px;
+            height: 480px;
+            aspect-ratio: 3 / 4; 
+        }
+        
+        #ano-0 .foto-historia-wrapper img {
+             object-position: top; 
+        }
+
+        .texto-historia-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+        }
+
+        .bloco-ano h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.9rem;
+            color: var(--cor-secundaria);
+            margin-bottom: 20px;
+        }
+
+        .bloco-ano p {
+            font-size: 1.15rem;
+            color: #c0c0c0;
+            text-align: justify; 
+            margin-bottom: 0;
+            line-height: 1.65;
+        }
+
+        /* --- CONTAINER DA LINHA DO TEMPO --- */
+        .container-linha-tempo {
+            width: 100%;
+            max-width: 550px;
+            margin: 30px auto;
+            position: relative;
+        }
+
+        .wrapper-slider-coracao {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .slider-anos {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: 1; 
+            height: 6px;
+            background: linear-gradient(to right, var(--cor-principal) 0%, var(--cor-principal) var(--progresso-barra), #4a3a3d var(--progresso-barra), #4a3a3d 100%);
+            border-radius: 5px;
+            outline: none;
+            pointer-events: none; 
+        }
+
+        .slider-anos::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--cor-principal);
+            box-shadow: 0 0 12px rgba(255, 117, 140, 0.6);
+        }
+
+        /* --- ANIMAÇÃO DO CORAÇÃO --- */
+        @keyframes pulsarSuave {
+            0% {
+                transform: scale(calc(var(--escala-base)));
+                filter: var(--filtro-brilho, none);
+            }
+            50% {
+                transform: scale(calc(var(--escala-base) + (0.10 * var(--intensidade-brilho))));
+                filter: var(--filtro-brilho-pulsar, none);
+            }
+            100% {
+                transform: scale(calc(var(--escala-base)));
+                filter: var(--filtro-brilho, none);
+            }
+        }
+
+        .container-coracao-animado {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: pulsarSuave 2.2s infinite ease-in-out;
+            will-change: transform, filter;
+        }
+
+        .container-coracao-animado svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .onda-fluida {
+            animation: moverOndaLateral 2s linear infinite;
+            transform-origin: center bottom;
+        }
+
+        @keyframes moverOndaLateral {
+            0% { transform: translateX(0px); }
+            100% { transform: translateX(-40px); } 
+        }
+
+        .rotulos-anos {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding: 0 5px;
+            width: calc(100% - 70px); 
+            position: relative;
+            z-index: 5;
+        }
+
+        .rotulos-anos span {
+            font-weight: bold;
+            color: #5a5a5a; 
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 2px 8px;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: auto; 
+        }
+
+        /* --- OUTRAS SEÇÕES --- */
+        .sonhos-galeria {
+            width: 100%;
+            min-height: 500px;
+            margin-top: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: nowrap;
+            overflow: visible;
+            padding: 18px 10px;
+            /* Mantém o deslize horizontal disponível sem exibir a barra inferior. */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .sonhos-galeria::-webkit-scrollbar {
+            display: none;
+        }
+
+        .dream-card {
+            position: relative;
+            display: block;
+            flex: 0 0 auto;
+            width: 240px;
+            min-width: 240px;
+            height: 360px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            perspective: 1800px;
+            transition: transform 0.45s ease, opacity 0.35s ease, filter 0.35s ease, width 0.45s ease, height 0.45s ease;
+            z-index: 1;
+            transform-style: preserve-3d;
+            opacity: 0.82;
+            filter: saturate(0.9);
+            border-radius: 22px;
+            overflow: visible;
+        }
+
+        .dream-card-inner {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            /* As faces continuam arredondadas; o contêiner não recorta o glow externo. */
+            overflow: visible;
+        }
+
+        .dream-card-face {
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
+            display: block;
+            background: linear-gradient(135deg, rgba(255, 117, 140, 0.98), rgba(255, 126, 179, 0.88));
+            transition: opacity 0.3s ease, transform 0.55s ease;
+        }
+
+        /* A frente mostra a imagem; a face traseira guarda o texto do sonho. */
+        .dream-card-back {
+            background: linear-gradient(135deg, rgba(255, 117, 140, 0.96), rgba(255, 126, 179, 0.8));
+            color: #fff;
+            padding: 22px 18px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            text-align: left;
+            gap: 12px;
+        }
+
+        .dream-card-back .dream-card-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.88;
+            font-weight: 700;
+        }
+
+        .dream-card-back h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.3rem, 2vw, 1.9rem);
+            line-height: 1.2;
+            margin: 0;
+            color: #fff;
+            display: block;
+        }
+
+        .dream-card-back p {
+            flex: 1 1 auto;
+            min-height: 0;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.92);
+            margin: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            text-align: left;
+            display: block;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 180, 214, 0.95) rgba(255, 117, 140, 0.2);
+        }
+
+        .dream-card-text-scroll {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 211, 234, 0.95) rgba(255, 117, 140, 0.2);
+        }
+
+        .dream-card-text-scroll p {
+            flex: none;
+            height: auto;
+            max-height: none;
+            overflow: visible;
+        }
+
+        .dream-card-text-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dream-card-text-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 117, 140, 0.15);
+            border-radius: 999px;
+        }
+
+        .dream-card-text-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ffd3ea, #ff7eb3);
+            border-radius: 999px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .dream-card-text-scroll::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ffe5f4, #ff758c);
+        }
+
+        /* A rolagem é feita diretamente pelo texto; sem controles de seta. */
+        .dream-card-scrollbar {
+            display: none !important;
+        }
+
+        .dream-card-front {
+            background: #111;
+            opacity: 1;
+            transform: rotateY(0);
+        }
+
+        .dream-card-back {
+            opacity: 0;
+            pointer-events: none;
+            transform: rotateY(90deg);
+        }
+
+        .dream-card.is-flipped .dream-card-front {
+            opacity: 0;
+            pointer-events: none;
+            transform: rotateY(-90deg);
+        }
+
+        .dream-card.is-flipped .dream-card-back {
+            opacity: 1;
+            pointer-events: auto;
+            transform: rotateY(0);
+        }
+
+        .dream-card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: saturate(1.05) contrast(1.08);
+        }
+
+        .dream-card-front::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(17, 17, 17, 0.82), rgba(17, 17, 17, 0.2));
+        }
+
+        .dream-card-caption {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 16px;
+            z-index: 2;
+            background: rgba(255, 117, 140, 0.18);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+            padding: 12px 14px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .dream-card.is-selected {
+            width: 360px;
+            min-width: 360px;
+            height: 460px;
+            opacity: 1;
+            filter: drop-shadow(0 16px 30px rgba(255, 117, 140, 0.35));
+            z-index: 20;
+            transform: scale(1.02);
+        }
+
+        .mensagem-amor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 220px;
+            font-size: clamp(4rem, 8vw, 8rem);
+            line-height: 1.1;
+            font-weight: 700;
+            color: #ffb3d9;
+            text-shadow: 0 0 20px rgba(255, 117, 163, 0.75), 0 0 40px rgba(255, 117, 163, 0.45);
+            opacity: 0;
+            transform: translateY(22px);
+            animation: aparecerMensagem 2.8s ease forwards;
+            letter-spacing: 2px;
+        }
+
+        @keyframes aparecerMensagem {
+            0% {
+                opacity: 0;
+                transform: translateY(22px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .raspadinhas-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .raspadinha-navegacao {
+            width: 44px;
+            height: 44px;
+            flex: 0 0 44px;
+            border: 1px solid rgba(255, 179, 217, 0.55);
+            border-radius: 50%;
+            background: rgba(255, 117, 140, 0.14);
+            color: #ffb3d9;
+            font-size: 1.8rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .raspadinha-navegacao:hover,
+        .raspadinha-navegacao:focus-visible {
+            background: var(--cor-principal);
+            box-shadow: 0 0 18px rgba(255, 117, 140, 0.45);
+            transform: scale(1.08);
+            outline: none;
+        }
+
+        .raspadinhas-galeria {
+            position: relative;
+            width: min(100%, 500px);
+            min-height: 465px;
+        }
+
+        .raspadinha-card {
+            display: none;
+            position: relative;
+            width: 100%;
+            min-height: 465px;
+            padding: 22px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 179, 217, 0.25);
+            border-radius: 24px;
+            background: #292027;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35), 0 0 28px rgba(255, 117, 140, 0.14);
+            animation: surgirRaspadinha 0.45s ease both;
+        }
+
+        .raspadinha-card.ativa {
+            display: block;
+        }
+
+        .raspadinha-card h3 {
+            position: relative;
+            z-index: 3;
+            margin-bottom: 16px;
+            color: #ffb3d9;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.7rem;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .raspadinha-instrucoes {
+            position: relative;
+            z-index: 3;
+            margin-bottom: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .raspadinha-card.revelada h3,
+        .raspadinha-card.revelada .raspadinha-instrucoes {
+            opacity: 1;
+        }
+
+        .raspadinha-janela {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            isolation: isolate;
+            border: 2px solid rgba(255, 179, 217, 0.38);
+            border-radius: 18px;
+            background: #171517;
+            cursor: crosshair;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .raspadinha-imagem,
+        .raspadinha-mensagem,
+        .raspadinha-camada {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .raspadinha-imagem {
+            z-index: 0;
+            display: block;
+            object-fit: cover;
+            transition: filter 0.8s ease;
+        }
+
+        .raspadinha-card.revelada .raspadinha-imagem {
+            /* O escurecimento atinge exclusivamente a foto revelada. */
+            filter: brightness(0.3);
+        }
+
+        .raspadinha-mensagem {
+            /* Esta camada não recebe o escurecimento aplicado somente à imagem. */
+            z-index: 5;
+            display: flex;
+            align-items: flex-end;
+            padding: 22px;
+            background: linear-gradient(to top, rgba(17, 12, 16, 0.92), rgba(17, 12, 16, 0.05) 68%);
+            color: #fff;
+            text-align: left;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            filter: none;
+        }
+
+        .raspadinha-mensagem strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #ffb3d9;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .raspadinha-mensagem p {
+            margin: 0;
+            font-size: 0.98rem;
+            line-height: 1.5;
+        }
+
+        .raspadinha-card.revelada .raspadinha-mensagem {
+            opacity: 1;
+        }
+
+        .raspadinha-camada {
+            z-index: 4;
+            display: block;
+            transition: opacity 0.8s ease;
+        }
+
+        .raspadinha-card.revelada .raspadinha-camada {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .raspadinha-contador {
+            position: absolute;
+            right: 12px;
+            bottom: 10px;
+            z-index: 4;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: rgba(26, 26, 26, 0.72);
+            color: #ffd3ea;
+            font-size: 0.75rem;
+        }
+
+        @keyframes surgirRaspadinha {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .playlists-area {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+            gap: 24px;
+            align-items: stretch;
+            width: 100%;
+        }
+
+        .playlist-bloco {
+            padding: 20px;
+            border: 1px solid rgba(255, 179, 217, 0.24);
+            border-radius: 20px;
+            background: rgba(255, 117, 140, 0.08);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.24);
+        }
+
+        .playlist-bloco h3 {
+            margin-bottom: 14px;
+            color: #ffb3d9;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.35rem;
+        }
+
+        .playlist-spotify {
+            display: block;
+            width: 100%;
+            min-height: 352px;
+            border: 0;
+            border-radius: 12px;
+        }
+
+        .playlist-youtube {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 352px;
+            padding: 24px;
+            border: 1px solid rgba(255, 179, 217, 0.3);
+            border-radius: 16px;
+            background: linear-gradient(145deg, rgba(255, 117, 140, 0.25), rgba(255, 126, 179, 0.08));
+            color: #fff;
+            text-align: left;
+            text-decoration: none;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .playlist-youtube:hover,
+        .playlist-youtube:focus-visible {
+            border-color: #ffb3d9;
+            box-shadow: 0 0 24px rgba(255, 117, 140, 0.28);
+            transform: translateY(-5px);
+            outline: none;
+        }
+
+        .playlist-youtube .playlist-icone {
+            color: #ffb3d9;
+            font-size: 2.5rem;
+        }
+
+        .playlist-youtube h3 {
+            margin: 18px 0 10px;
+            color: #fff;
+        }
+
+        .playlist-youtube p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 1rem;
+            line-height: 1.55;
+        }
+
+        .playlist-youtube .playlist-abrir {
+            align-self: flex-start;
+            margin-top: 24px;
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 179, 217, 0.55);
+            border-radius: 999px;
+            color: #ffd3ea;
+            font-size: 0.9rem;
+        }
+
+        .texto-corpo p:not(.mensagem-amor) {
+            font-size: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 80px 20px;
+            color: #5a5a5a; 
+            font-size: 0.95rem;
+            background-color: #1a1a1a; 
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 1024px) {
+            .conteudo-secao.secao-historia-layout { max-width: 950px; }
+            .conteudo-historia { height: 500px; }
+            .foto-historia-wrapper { flex: 0 0 350px; width: 350px; height: 350px; }
+            #ano-0 .foto-historia-wrapper { flex: 0 0 262px; width: 262px; height: 350px; }
+            .grid-fotos-2025 { flex: 0 0 420px; width: 420px; height: 350px; }
+
+            .sonhos-galeria {
+                min-height: 580px;
+                justify-content: flex-start;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scroll-padding-inline: 60px;
+                padding: 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .secao-mural { padding: 80px 20px 100px 20px; }
+            .conteudo-historia { height: auto; min-height: 750px; }
+            .bloco-ano { position: relative; flex-direction: column; align-items: center; gap: 25px; opacity: 0; display: none; }
+            .bloco-ano.ativo { display: flex; opacity: 1; }
+            .foto-historia-wrapper { flex: 0 0 280px; width: 280px; height: 280px; }
+            #ano-0 .foto-historia-wrapper { flex: 0 0 210px; width: 210px; height: 280px; aspect-ratio: 3 / 4; }
+            .grid-fotos-2025 { flex: 0 0 auto; width: 100%; max-width: 320px; height: 110px; gap: 8px; }
+            .texto-historia-wrapper { text-align: center; }
+            .bloco-ano p { text-align: center; }
+            .conteudo-secao h2 { font-size: 2.4rem; }
+            .seta-rolar-container { bottom: 20px; }
+            .sonhos-galeria { gap: 12px; overflow-x: auto; justify-content: flex-start; }
+            .dream-card { width: 200px; min-width: 200px; height: 320px; }
+            .dream-card.is-selected { width: 260px; min-width: 260px; height: 380px; }
+            .raspadinhas-area { gap: 8px; }
+            .raspadinha-navegacao { width: 38px; height: 38px; flex-basis: 38px; font-size: 1.5rem; }
+            .raspadinhas-galeria { min-height: 440px; }
+            .raspadinha-card { min-height: 440px; padding: 16px; }
+            .raspadinha-janela { height: 290px; }
+            .playlists-area { grid-template-columns: 1fr; }
+            .playlist-bloco { padding: 16px; }
+        }
+
+        @media (max-width: 420px) {
+            .mural-wrapper {
+                height: 430px;
+            }
+
+            .carrossel-mural img {
+                width: 250px;
+            }
+
+            header {
+                top: 28px;
+                width: calc(100% - 32px);
+                padding: 20px 16px;
+                border-radius: 12px;
+            }
+
+            header h1 {
+                font-size: 1.55rem;
+                line-height: 1.2;
+            }
+
+            header p {
+                font-size: 0.82rem;
+                line-height: 1.45;
+            }
+
+            .secao-mural {
+                min-height: 100svh;
+                padding: 64px 16px 88px;
+            }
+
+            .conteudo-secao h2 {
+                max-width: 100%;
+                margin-bottom: 24px;
+                font-size: 1.85rem;
+                line-height: 1.2;
+                letter-spacing: 0;
+                gap: 8px;
+            }
+
+            .texto-corpo > p,
+            .bloco-ano p {
+                font-size: 0.98rem;
+                line-height: 1.55;
+            }
+
+            .conteudo-historia {
+                min-height: 0;
+                margin-top: 28px;
+            }
+
+            .bloco-ano {
+                display: none;
+                grid-template-columns: 1fr;
+                align-items: center;
+                justify-items: center;
+                gap: 16px;
+                height: auto;
+                min-height: 0;
+                text-align: left;
+                width: 100%;
+                overflow: visible;
+            }
+
+            .bloco-ano.ativo {
+                display: grid;
+            }
+
+            .foto-historia-wrapper {
+                width: min(100%, 158px);
+                height: 211px;
+                flex: none;
+            }
+
+            #ano-0 .foto-historia-wrapper {
+                width: min(100%, 158px);
+                height: 211px;
+                flex: none;
+            }
+
+            .grid-fotos-2025 {
+                width: min(100%, 340px);
+                height: 145px;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+                flex: none;
+            }
+
+            .foto-historia-wrapper img,
+            .grid-fotos-2025 img {
+                border-width: 2px;
+                border-radius: 8px;
+            }
+
+            .texto-historia-wrapper {
+                min-width: 0;
+                width: min(100%, 350px);
+                justify-self: center;
+                overflow-wrap: normal;
+                word-break: normal;
+                text-align: center;
+            }
+
+            .bloco-ano h3 {
+                width: 100%;
+                margin-bottom: 12px;
+                font-size: 1.05rem;
+                line-height: 1.25;
+                text-align: center;
+                overflow-wrap: anywhere;
+            }
+
+            .texto-corpo .bloco-ano p {
+                font-size: 0.78rem;
+                line-height: 1.42;
+                text-align: justify;
+                text-justify: inter-word;
+                overflow-wrap: normal;
+                word-break: normal;
+            }
+
+            .container-linha-tempo {
+                margin: 22px auto;
+            }
+
+            .wrapper-slider-coracao {
+                gap: 12px;
+            }
+
+            .container-coracao-animado {
+                width: 38px;
+                height: 38px;
+            }
+
+            .rotulos-anos span {
+                padding: 2px 4px;
+                font-size: 0.9rem;
+            }
+
+            .sonhos-galeria {
+                /* Espaço para o glow não ser cortado pela área rolável. */
+                min-height: 484px;
+                margin-top: 18px;
+                justify-content: flex-start;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scroll-snap-type: x mandatory;
+                scroll-padding-inline: 60px;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+                touch-action: auto;
+                padding: 52px 60px 84px;
+                gap: 10px;
+            }
+
+            .dream-card-inner {
+                overflow: visible;
+            }
+
+            .sonhos-galeria::-webkit-scrollbar {
+                display: none;
+            }
+
+            .dream-card {
+                width: 238px;
+                min-width: 238px;
+                height: 348px;
+                scroll-snap-align: center;
+            }
+
+            .dream-card.is-selected {
+                width: 238px;
+                min-width: 238px;
+                height: 348px;
+                transform: scale(1.02);
+                filter: saturate(1.05) !important;
+            }
+
+            .dream-card.is-selected .dream-card-face {
+                border-color: rgba(255, 179, 217, 0.9);
+                box-shadow: inset 0 0 22px rgba(255, 117, 140, 0.62),
+                    inset 0 0 5px rgba(255, 255, 255, 0.85);
+            }
+
+            .dream-card-back {
+                padding: 16px 14px 14px;
+                gap: 8px;
+            }
+
+            .dream-card-back .dream-card-label {
+                font-size: 0.68rem;
+                letter-spacing: 1px;
+            }
+
+            .dream-card-back h3 {
+                font-size: 1.18rem;
+            }
+
+            .dream-card-back p {
+                font-size: 0.78rem;
+                line-height: 1.45;
+            }
+
+            .dream-card-text-scroll {
+                flex: 0 0 220px;
+                position: relative;
+                height: 220px;
+                min-height: 220px;
+                max-height: 220px;
+                overflow-y: scroll;
+                padding-right: 16px;
+                overscroll-behavior: contain;
+                pointer-events: auto;
+                touch-action: pan-y;
+                user-select: text;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .dream-card-text-scroll p {
+                pointer-events: auto;
+                touch-action: auto;
+            }
+
+            .dream-card-text-scroll::-webkit-scrollbar {
+                display: none;
+            }
+
+            .dream-card-scrollbar {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 10px;
+                display: block;
+                border-radius: 999px;
+                background: rgba(255, 117, 140, 0.22);
+                pointer-events: auto;
+            }
+
+            .dream-card-scrollbar-thumb {
+                position: absolute;
+                top: 20px;
+                left: 1px;
+                width: 8px;
+                min-height: 42px;
+                background: #ff7eb3;
+                border: 2px solid rgba(255, 117, 140, 0.22);
+                border-radius: 999px;
+                cursor: grab;
+                pointer-events: auto;
+            }
+
+            .dream-card-scrollbar-arrow {
+                position: absolute;
+                left: 0;
+                z-index: 2;
+                width: 10px;
+                height: 18px;
+                color: #ffd3ea;
+                font-size: 8px;
+                line-height: 18px;
+                text-align: center;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .dream-card-scrollbar-up { top: 0; }
+            .dream-card-scrollbar-down { bottom: 0; }
+
+            .dream-card-scrollbar-thumb:active,
+            .dream-card-scrollbar-thumb.arrastando {
+                cursor: grabbing;
+                background: #ffd3ea;
+            }
+
+            .raspadinhas-area {
+                gap: 6px;
+            }
+
+            .raspadinha-navegacao {
+                width: 34px;
+                height: 34px;
+                flex-basis: 34px;
+                font-size: 1.3rem;
+            }
+
+            .raspadinhas-galeria,
+            .raspadinha-card {
+                min-height: 390px;
+            }
+
+            .raspadinha-card {
+                padding: 14px;
+                border-radius: 18px;
+            }
+
+            .raspadinha-card h3 {
+                margin-bottom: 10px;
+                font-size: 1.35rem;
+            }
+
+            .raspadinha-instrucoes {
+                margin-bottom: 10px;
+                font-size: 0.78rem;
+            }
+
+            .raspadinha-janela {
+                height: 270px;
+            }
+
+            .raspadinha-mensagem {
+                padding: 16px;
+            }
+
+            .raspadinha-mensagem strong {
+                font-size: 1rem;
+            }
+
+            .raspadinha-mensagem p {
+                font-size: 0.82rem;
+                line-height: 1.4;
+            }
+
+            .playlists-area {
+                gap: 14px;
+            }
+
+            .playlist-bloco {
+                padding: 12px;
+            }
+
+            .playlist-spotify {
+                min-height: 300px;
+            }
+
+            .playlist-youtube {
+                min-height: 260px;
+                padding: 18px;
+            }
+
+            .playlist-youtube p {
+                font-size: 0.88rem;
+            }
+
+            .mensagem-amor {
+                min-height: 160px;
+                font-size: clamp(2.8rem, 14vw, 4.5rem);
+                letter-spacing: 0;
+            }
+
+            footer {
+                padding: 48px 16px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Usa a área realmente visível do navegador para manter o mural
+           centralizado mesmo quando as barras do celular aparecem ou somem. */
+        @media (max-width: 768px) {
+            /* Remove o realce azul nativo de toque/foco, sem alterar os eventos. */
+            button,
+            a,
+            input,
+            [role="button"],
+            .dream-card,
+            .raspadinha-janela,
+            .rotulos-anos span {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            button:focus,
+            a:focus,
+            input:focus,
+            [role="button"]:focus,
+            .dream-card:focus,
+            .raspadinha-janela:focus,
+            .rotulos-anos span:focus {
+                outline: none;
+            }
+
+            /* Evita uma fresta de 1px sem filtro, causada pelo arredondamento
+               de pixels do carrossel em navegadores móveis. */
+            .overlay-gradiente {
+                inset: -8px;
+                width: auto;
+                height: auto;
+                transform: translateZ(0);
+            }
+
+            body {
+                min-height: var(--altura-viewport);
+            }
+
+            .mural-wrapper {
+                height: clamp(360px, var(--altura-mural), 500px);
+            }
+
+            .secao-mural {
+                min-height: var(--altura-viewport);
+                padding-inline: clamp(16px, 5vw, 28px);
+                padding-block: clamp(64px, 10vh, 96px);
+            }
+
+            .conteudo-secao,
+            .conteudo-secao.secao-historia-layout {
+                width: min(100%, 800px);
+                min-width: 0;
+            }
+
+            /* A galeria é propositalmente "full bleed": os cards podem chegar
+               até as laterais da tela, sem serem cortados pelas margens da seção. */
+            .sonhos-galeria {
+                width: 100vw;
+                margin-left: calc(50% - 50vw);
+                margin-right: calc(50% - 50vw);
+            }
+
+            img,
+            iframe {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mural-wrapper">
+        <header>
+            <h1>Mural de Nós Dois 💖</h1>
+            <p>Um espaço dedicado a tudo que construímos e ainda vamos construir.</p>
+        </header>
+
+        <div class="carrossel-mural">
+            <img src="images_carrossel/20250731_234745.jpg" alt="Foto 1">
+            <img src="images_carrossel/20251121_235126.jpg" alt="Foto 2">
+            <img src="images_carrossel/IMG-20250621-WA0005.jpg" alt="Foto 3">
+            <img src="images_carrossel/IMG-20251025-WA0003.jpg" alt="Foto 4">
+            <img src="images_carrossel/IMG-20260117-WA0019.jpg" alt="Foto 5">
+            <img src="images_carrossel/Screenshot_20250620_215953_Snapchat.jpg" alt="Foto 6">
+            <img src="images_carrossel/Snapchat-658271436.jpg" alt="Foto 7">
+            <img src="images_carrossel/Snapchat-1312908520.jpg" alt="Foto 8">
+            <img src="images_carrossel/Snapchat-1455274457.jpg" alt="Foto 9">
+            <!-- Segunda cópia completa: a animação termina exatamente no mesmo
+                 ponto em que a primeira sequência começa, sem salto visual. -->
+            <img src="images_carrossel/20250731_234745.jpg" alt="">
+            <img src="images_carrossel/20251121_235126.jpg" alt="">
+            <img src="images_carrossel/IMG-20250621-WA0005.jpg" alt="">
+            <img src="images_carrossel/IMG-20251025-WA0003.jpg" alt="">
+            <img src="images_carrossel/IMG-20260117-WA0019.jpg" alt="">
+            <img src="images_carrossel/Screenshot_20250620_215953_Snapchat.jpg" alt="">
+            <img src="images_carrossel/Snapchat-658271436.jpg" alt="">
+            <img src="images_carrossel/Snapchat-1312908520.jpg" alt="">
+            <img src="images_carrossel/Snapchat-1455274457.jpg" alt="">
+        </div>
+        <div class="overlay-gradiente"></div>
+    </div>
+
+    <section class="secao-mural">
+        <div class="conteudo-secao viver-esquerda secao-historia-layout">
+            <h2>📖 Nossa História</h2>
+            <div class="texto-corpo">
+                <p style="margin-bottom: 20px;">Clique nos anos abaixo para navegar pelos capítulos da nossa jornada:</p>
+                
+                <div class="container-linha-tempo">
+                    <div class="wrapper-slider-coracao">
+                        <input type="range" min="0" max="3" step="0.01" value="0" class="slider-anos" id="linhaTempoSlider" readonly>
+                        
+                        <div class="container-coracao-animado" id="coracaoMetrica">
+                            <svg viewBox="0 0 32 30" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <mask id="mascaraCoracao">
+                                        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#ffffff" />
+                                    </mask>
+                                </defs>
+                                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#4a4a4a" /> 
+                                <g mask="url(#mascaraCoracao)">
+                                    <g id="nivelLiquido" transform="translate(0, 32)">
+                                        <path class="onda-fluida" d="M 0 0 Q 10 -3, 20 0 T 40 0 T 60 0 T 80 0 L 80 40 L 0 40 Z" fill="#ff2a54" />
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="rotulos-anos">
+                        <span id="rotulo-0" onclick="cliqueNoAno(0)">2023</span>
+                        <span id="rotulo-1" onclick="cliqueNoAno(1)">2024</span>
+                        <span id="rotulo-2" onclick="cliqueNoAno(2)">2025</span>
+                        <span id="rotulo-3" onclick="cliqueNoAno(3)">2026</span>
+                    </div>
+                </div>
+
+                <div class="conteudo-historia">
+                    <div class="bloco-ano" id="ano-0">
+                        <div class="foto-historia-wrapper foto-flutuante">
+                            <img src="images_história/2023.jpg" alt="2023">
+                        </div>
+                        <div class="texto-historia-wrapper">
+                            <h3>Nos Conhecemos...</h3>
+                            <p>Foi o ano em que nossa história começou a ser escrita, mesmo que ainda como uma grande amizade. A gente passou a conversar cada vez mais, dividindo segredos, confissões, inseguranças e muitos conselhos amorosos. Naquela época, você ainda vivia outro vínculo amoroso, e eu tentava te apoiar da melhor forma possível em tudo o que estava acontecendo. Talvez não tenha sido o cenário mais ideal, mas foi justamente nesse processo que fomos criando confiança, intimidade e uma conexão muito sincera. Aos poucos, você se tornou uma das pessoas com quem eu mais gostava de conversar e passar o tempo. Entre convites para os cultos, mensagens ao longo do dia, brincadeiras e conversas profundas, nossa amizade foi crescendo de um jeito muito natural. Hoje, olhando para trás, percebo que antes mesmo de existir um relacionamento, já existia carinho, cuidado e uma vontade genuína de ver você bem.</p>
+                        </div>
+                    </div>
+
+                    <div class="bloco-ano" id="ano-1">
+                        <div class="foto-historia-wrapper foto-flutuante">
+                            <img src="images_história/2024.jpg" alt="2024">
+                        </div>
+                        <div class="texto-historia-wrapper">
+                            <h3>Início de uma Amizade Profunda</h3>
+                            <p>Foi o ano em que nossa conexão se tornou ainda mais forte sem que a gente percebesse. Conversávamos praticamente todos os dias, compartilhando segredos, experiências amorosas frustradas, medos, sonhos e pensamentos que poucas pessoas conheciam sobre nós. Aos poucos, fomos nos tornando o porto seguro um do outro. Existia um cuidado muito natural entre a gente, aquela preocupação constante em saber se o outro estava bem, como tinha sido o dia ou o que estava sentindo. Sem perceber, também criávamos pequenos ciúmes um no outro, sinais silenciosos de que nosso vínculo já estava se tornando algo diferente. Você virou minha mensagem diária favorita, e eu acredito que eu também tenha me tornado isso para você. No meio de tantas conversas, conselhos, brincadeira e apoio mútuo, acabamos nos tornando melhores amigos, daqueles que dividem a vida mesmo nos detalhes mais simples.</p>
+                        </div>
+                    </div>
+
+                    <div class="bloco-ano" id="ano-2">
+                        <div class="grid-fotos-2025">
+                            <img src="images_história/2025_0.jpg" class="foto-flutuante foto-delay-1" alt="2025 A">
+                            <img src="images_história/2025_1.jpg" class="foto-flutuante foto-delay-2" alt="2025 B">
+                            <img src="images_história/2025_2.jpg" class="foto-flutuante foto-delay-3" alt="2025 C" style="object-position: right;">
+                        </div>
+                        <div class="texto-historia-wrapper">
+                            <h3>Borbulham os Sentimentos</h3>
+                            <p>Foi o ano em que eu percebi que tudo entre nós tinha mudado. Nossas conversas ficaram ainda mais especiais, os sentimentos começaram a crescer de forma leve e sincera, e sem perceber eu já estava completamente envolvido por você. A gente brincava cada vez mais sobre a ideia de namorar, criava cenários no imaginário e até assinamos aquele “contrato” que você fez, mas no fundo acho que nós dois já sabíamos que aquilo estava se tornando algo real. O Dia das Crianças de 25 de maio ficou marcado em mim pelas brincadeiras que cuidamos juntos e pela foto sua que até hoje é uma das minhas favoritas. Também foi o ano em que eu arranjava qualquer desculpa para ir ao IFB só para te ver. Aos poucos começamos a ficar, até chegar o dia do nosso primeiro beijo no cinema, no meu aniversário, ao som da trilha dos créditos. Um momento que ficou eternizado no meu coração.</p>
+                        </div>
+                    </div>
+
+                    <div class="bloco-ano" id="ano-3">
+                        <div class="foto-historia-wrapper foto-flutuante">
+                            <img src="images_história/2026.jpg" alt="2026">
+                        </div>
+                        <div class="texto-historia-wrapper">
+                            <h3>Nosso Relacionamento Oficial</h3>
+                            <p>Um ano de amadurecimento, crescimento e construção. Nosso relacionamento se fortaleceu através do companheirismo, da compreensão e do cuidado em entender os desafios um do outro. Foi o período em que nosso amor ganhou ainda mais profundidade, enquanto sonhávamos e trabalhávamos juntos pelos nossos objetivos. Entre conversas sobre o futuro, planos compartilhados e a vontade sincera de construir uma vida lado a lado, fomos aprendendo que amar também é escolher permanecer, apoiar e crescer juntos todos os dias.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="seta-rolar-container">
+            <button class="btn-seta-rolar" onclick="rolarParaProximaSecao(this)" aria-label="Rolar para baixo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <section class="secao-mural">
+        <div class="conteudo-secao viver-direita">
+            <h2>🚀 Nossos Sonhos</h2>
+            <div class="texto-corpo">
+                <p style="margin: 0 0 18px; color: rgba(255, 255, 255, 0.8); font-size: 1rem; letter-spacing: 0.04em; text-align: center;">
+                    Clique nos cards para explorar cada sonho e descobrir um pouco mais do nosso futuro juntos.
+                </p>
+                <div class="sonhos-galeria" id="sonhosGaleria">
+                    <button class="dream-card is-selected" type="button" data-index="0" aria-label="Sonho 1: Descobrir o mundo ao seu lado">
+                        <span class="dream-card-inner">
+                            <span class="dream-card-face dream-card-back">
+                                <span class="dream-card-label">✦ Sonho 1</span>
+                                <h3>Descobrir o mundo ao seu lado</h3>
+                                <span class="dream-card-text-scroll"><p>Quero viver a alegria de sair com você sem pressa, conhecer lugares novos, descobrir cantinhos que ainda não conhecemos e transformar cada passeio em uma lembrança nossa. Quero provar muitos sabores, conhecer restaurantes, rir de coisas bobas e perceber que, no fim, o lugar importa menos quando tenho você ao meu lado.</p><span class="dream-card-scrollbar"><span class="dream-card-scrollbar-arrow dream-card-scrollbar-up" role="button" aria-label="Subir texto">&#9650;</span><span class="dream-card-scrollbar-thumb"></span><span class="dream-card-scrollbar-arrow dream-card-scrollbar-down" role="button" aria-label="Descer texto">&#9660;</span></span></span>
+                            </span>
+                            <span class="dream-card-face dream-card-front">
+                                <img src="sonhos/Sonho1.png" alt="Viagem e descoberta juntos">
+                                <span class="dream-card-caption">Descobrir o mundo ao seu lado</span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button class="dream-card" type="button" data-index="1" aria-label="Sonho 2: Nosso pequeno mundo">
+                        <span class="dream-card-inner">
+                            <span class="dream-card-face dream-card-back">
+                                <span class="dream-card-label">✦ Sonho 2</span>
+                                <h3>Nosso pequeno mundo</h3>
+                                <span class="dream-card-text-scroll"><p>Sonho com aqueles dias simples em que não precisamos ir a lugar algum, apenas ficar juntos. Passar horas na casa um do outro, escolher um filme, cozinhar alguma coisa juntos, conversar entre abraços e encher o dia de carinho. Porque também quero amar você na tranquilidade dos dias comuns, quando a felicidade mora simplesmente na sua presença.</p><span class="dream-card-scrollbar"><span class="dream-card-scrollbar-arrow dream-card-scrollbar-up" role="button" aria-label="Subir texto">&#9650;</span><span class="dream-card-scrollbar-thumb"></span><span class="dream-card-scrollbar-arrow dream-card-scrollbar-down" role="button" aria-label="Descer texto">&#9660;</span></span></span>
+                            </span>
+                            <span class="dream-card-face dream-card-front">
+                                <img src="sonhos/Sonho2.png" alt="Dia simples e acolhedor em casa">
+                                <span class="dream-card-caption">Nosso pequeno mundo</span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button class="dream-card" type="button" data-index="2" aria-label="Sonho 3: Fazer parte da vida um do outro">
+                        <span class="dream-card-inner">
+                            <span class="dream-card-face dream-card-back">
+                                <span class="dream-card-label">✦ Sonho 3</span>
+                                <h3>Fazer parte da vida um do outro</h3>
+                                <span class="dream-card-text-scroll"><p>Quero estar ao seu lado nos encontros de família, conhecer as pessoas que fizeram parte da sua história e permitir que você conheça cada vez mais as que fazem parte da minha. Quero construir, pouco a pouco, um lugar entre aqueles que estarão presentes no nosso futuro, compartilhando risadas, datas especiais, histórias e momentos que, um dia, também serão parte da nossa própria história.</p><span class="dream-card-scrollbar"><span class="dream-card-scrollbar-arrow dream-card-scrollbar-up" role="button" aria-label="Subir texto">&#9650;</span><span class="dream-card-scrollbar-thumb"></span><span class="dream-card-scrollbar-arrow dream-card-scrollbar-down" role="button" aria-label="Descer texto">&#9660;</span></span></span>
+                            </span>
+                            <span class="dream-card-face dream-card-front">
+                                <img src="sonhos/Sonho3.png" alt="Família e momentos especiais juntos">
+                                <span class="dream-card-caption">Fazer parte da vida um do outro</span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button class="dream-card" type="button" data-index="3" aria-label="Sonho 4: Uma vida inteira de viagens">
+                        <span class="dream-card-inner">
+                            <span class="dream-card-face dream-card-back">
+                                <span class="dream-card-label">✦ Sonho 4</span>
+                                <h3>Uma vida inteira de viagens</h3>
+                                <span class="dream-card-text-scroll"><p>E, entre todos os sonhos, existe aquele que mais parece um começo: <strong>casar com você</strong>. Construir nosso lar, nossa vida e nossa história, e depois abrir as portas do mundo para nós dois. Quero viajar para lugares que ainda nem conhecemos, contemplar paisagens novas segurando sua mão e colecionar memórias por todos os cantos, porque, mais do que conhecer o mundo, quero conhecer o mundo <strong>com você</strong>.</p><span class="dream-card-scrollbar"><span class="dream-card-scrollbar-arrow dream-card-scrollbar-up" role="button" aria-label="Subir texto">&#9650;</span><span class="dream-card-scrollbar-thumb"></span><span class="dream-card-scrollbar-arrow dream-card-scrollbar-down" role="button" aria-label="Descer texto">&#9660;</span></span></span>
+                            </span>
+                            <span class="dream-card-face dream-card-front">
+                                <img src="sonhos/Sonho2.png" alt="Viagem e vida juntos ao redor do mundo">
+                                <span class="dream-card-caption">Uma vida inteira de viagens</span>
+                            </span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="seta-rolar-container">
+            <button class="btn-seta-rolar" onclick="rolarParaProximaSecao(this)" aria-label="Rolar para baixo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <section class="secao-mural">
+        <div class="conteudo-secao viver-esquerda">
+            <h2>💝 O que eu mais amo</h2>
+            <div class="texto-corpo">
+                <p style="margin-bottom: 20px;">Segure e arraste sobre a imagem para descobrir cada detalhe. Use as setas para continuar.</p>
+                <div class="raspadinhas-area" aria-label="Galeria de raspadinhas">
+                    <button class="raspadinha-navegacao" id="raspadinhaAnterior" type="button" aria-label="Raspadinha anterior">&#8249;</button>
+                    <div class="raspadinhas-galeria" id="raspadinhasGaleria">
+                        <article class="raspadinha-card ativa" data-indice="0">
+                            <h3>♡ Sorriso</h3>
+                            <p class="raspadinha-instrucoes">Segure e arraste para raspar a imagem.</p>
+                            <div class="raspadinha-janela">
+                                <img class="raspadinha-imagem" src="oq_amo/sorriso.jpg" alt="Sorriso">
+                                <div class="raspadinha-mensagem"><div><strong>♡ Sorriso</strong><p>Um sorriso tão lindo e iluminado que basta vê-lo para meu coração se encher de alegria.</p></div></div>
+                                <canvas class="raspadinha-camada" aria-label="Área para raspar e revelar a imagem"></canvas>
+                                <span class="raspadinha-contador">0% revelado</span>
+                            </div>
+                        </article>
+                        <article class="raspadinha-card" data-indice="1">
+                            <h3>♡ Olhos</h3>
+                            <p class="raspadinha-instrucoes">Segure e arraste para raspar a imagem.</p>
+                            <div class="raspadinha-janela">
+                                <img class="raspadinha-imagem" src="oq_amo/olhos.jpg" alt="Olhos">
+                                <div class="raspadinha-mensagem"><div><strong>♡ Olhos</strong><p>Escuros, profundos e hipnotizantes, com um brilho só seu. Amo me perder na imensidão do seu olhar.</p></div></div>
+                                <canvas class="raspadinha-camada" aria-label="Área para raspar e revelar a imagem"></canvas>
+                                <span class="raspadinha-contador">0% revelado</span>
+                            </div>
+                        </article>
+                        <article class="raspadinha-card raspadinha-card-apoio" data-indice="2">
+                            <h3>♡ Mensagens de apoio</h3>
+                            <p class="raspadinha-instrucoes">Segure e arraste para raspar a imagem.</p>
+                            <div class="raspadinha-janela">
+                                <img class="raspadinha-imagem" src="oq_amo/palavras.jpg" alt="Mensagens de apoio">
+                                <div class="raspadinha-mensagem"><div><strong>♡ Mensagens de apoio</strong><p>Nos meus dias mais difíceis, você sempre me oferece carinho, atenção e cuidado. Seu afeto nunca me faltou, e isso significa muito para mim.</p></div></div>
+                                <canvas class="raspadinha-camada" aria-label="Área para raspar e revelar a imagem"></canvas>
+                                <span class="raspadinha-contador">0% revelado</span>
+                            </div>
+                        </article>
+                    </div>
+                    <button class="raspadinha-navegacao" id="raspadinhaProxima" type="button" aria-label="Próxima raspadinha">&#8250;</button>
+                </div>
+            </div>
+        </div>
+        <div class="seta-rolar-container">
+            <button class="btn-seta-rolar" onclick="rolarParaProximaSecao(this)" aria-label="Rolar para baixo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <section class="secao-mural">
+        <div class="conteudo-secao viver-direita">
+            <h2>🎶 Nossa Playlist</h2>
+            <div class="texto-corpo">
+                <p style="margin-bottom: 20px;">Músicas que guardam um pedacinho da nossa história e dos nossos sentimentos.</p>
+                <div class="playlists-area">
+                    <div class="playlist-bloco">
+                        <h3>Spotify</h3>
+                        <iframe class="playlist-spotify" data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/58Gi6SecATnmFpx5EpNY6I?utm_source=generator&amp;si=99daebad25aa42fc" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Playlist do Spotify"></iframe>
+                    </div>
+                    <a class="playlist-youtube" href="https://music.youtube.com/playlist?list=PLKmj4mQcFciA&amp;si=goCXVE1sk_qztNwl" target="_blank" rel="noopener noreferrer" aria-label="Abrir playlist no YouTube Music">
+                        <span>
+                            <span class="playlist-icone">▶</span>
+                            <h3>YouTube Music</h3>
+                            <p>Uma segunda seleção de músicas feita especialmente para nós.</p>
+                        </span>
+                        <span class="playlist-abrir">Abrir playlist ↗</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="seta-rolar-container">
+            <button class="btn-seta-rolar" onclick="rolarParaProximaSecao(this)" aria-label="Rolar para baixo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <section class="secao-mural">
+        <div class="conteudo-secao viver-direita">
+            <div class="texto-corpo">
+                <p class="mensagem-amor">Eu te Amo💗</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        Feito com 💗 por Marco Túlio em 2026
+    </footer>
+
+    <script>
+        // Mantém as variáveis de viewport sincronizadas com a área visível da tela.
+        // O visualViewport desconta as barras do navegador no celular e é atualizado
+        // também após rotação do aparelho.
+        function atualizarViewport() {
+            const viewport = window.visualViewport;
+            const largura = viewport ? viewport.width : window.innerWidth;
+            const altura = viewport ? viewport.height : window.innerHeight;
+            const raiz = document.documentElement;
+
+            raiz.style.setProperty('--largura-viewport', `${largura}px`);
+            raiz.style.setProperty('--altura-viewport', `${altura}px`);
+            raiz.style.setProperty('--altura-mural', `${altura * 0.68}px`);
+        }
+
+        atualizarViewport();
+        window.addEventListener('resize', atualizarViewport, { passive: true });
+        window.addEventListener('orientationchange', atualizarViewport, { passive: true });
+        window.visualViewport?.addEventListener('resize', atualizarViewport, { passive: true });
+
+        function rolarParaProximaSecao(botao) {
+            const secaoAtual = botao.closest('.secao-mural');
+            const proximaSecao = secaoAtual.nextElementSibling;
+            
+            if (proximaSecao && proximaSecao.classList.contains('secao-mural')) {
+                proximaSecao.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function renderizarLinhaTempo(valorContínuo) {
+            const valor = parseFloat(valorContínuo);
+            const totalAnos = 4;
+
+            const porcentagemBarra = (valor / 3) * 100;
+            const raizEstilo = document.documentElement;
+            raizEstilo.style.setProperty('--progresso-barra', `${porcentagemBarra}%`);
+
+            const nivelMaximoVazio = 32;
+            const nivelMaximoCheio = -2;
+            const alturaLiquidoY = nivelMaximoVazio - ((valor / 3) * (nivelMaximoVazio - nivelMaximoCheio));
+            
+            const elementoLiquido = document.getElementById('nivelLiquido');
+            if (elementoLiquido) {
+                elementoLiquido.setAttribute('transform', `translate(0, ${alturaLiquidoY})`);
+            }
+
+            if (valor > 2.0) {
+                const progressoBrilho = (valor - 2.0) / 1.0; 
+                const novaEscala = 1 + (0.25 * progressoBrilho); 
+                
+                raizEstilo.style.setProperty('--escala-base', novaEscala);
+                raizEstilo.style.setProperty('--intensidade-brilho', progressoBrilho);
+                
+                raizEstilo.style.setProperty('--filtro-brilho', `drop-shadow(0 0 calc(12px * ${progressoBrilho}) #ff2a54) drop-shadow(0 0 calc(32px * ${progressoBrilho}) #ff758c)`);
+                raizEstilo.style.setProperty('--filtro-brilho-pulsar', `drop-shadow(0 0 calc(16px * ${progressoBrilho}) #ff2a54) drop-shadow(0 0 calc(42px * ${progressoBrilho}) #ff758c)`);
+            } else {
+                raizEstilo.style.setProperty('--escala-base', '1');
+                raizEstilo.style.setProperty('--intensidade-brilho', '0');
+                raizEstilo.style.setProperty('--filtro-brilho', 'none');
+                raizEstilo.style.setProperty('--filtro-brilho-pulsar', 'none');
+            }
+
+            const anoMaisProximo = Math.round(valor);
+
+            for (let i = 0; i < totalAnos; i++) {
+                const bloco = document.getElementById(`ano-${i}`);
+                const rotulo = document.getElementById(`rotulo-${i}`);
+                
+                if (!bloco || !rotulo) continue;
+
+                if (i === anoMaisProximo) {
+                    bloco.classList.add('ativo');
+                    const dif = valor - i;
+                    bloco.style.transform = `translateX(${dif * -40}px)`;
+                } else {
+                    bloco.classList.remove('ativo');
+                    const dif = valor - i;
+                    bloco.style.transform = `translateX(${dif * -100}px)`;
+                }
+
+                if (i === anoMaisProximo) {
+                    rotulo.style.color = "var(--cor-principal)";
+                    rotulo.style.transform = "scale(1.18)";
+                    rotulo.style.textShadow = "0 0 12px rgba(255, 117, 140, 0.6)"; 
+                } else {
+                    rotulo.removeAttribute('style');
+                }
+            }
+        }
+
+        function cliqueNoAno(anoFixo) {
+            const slider = document.getElementById('linhaTempoSlider');
+            let inicio = parseFloat(slider.value);
+            const fim = anoFixo;
+            const duracao = 950; 
+            let tempoInicio = null;
+
+            function animarClique(timestamp) {
+                if (!tempoInicio) tempoInicio = timestamp;
+                const progresso = timestamp - tempoInicio;
+                const taxa = Math.min(progresso / duracao, 1);
+                
+                const taxaSuave = 1 - Math.pow(1 - taxa, 3); 
+                const valorAtual = inicio + (fim - inicio) * taxaSuave;
+                
+                slider.value = valorAtual;
+                renderizarLinhaTempo(valorAtual);
+
+                if (taxa < 1) {
+                    requestAnimationFrame(animarClique);
+                }
+            }
+            requestAnimationFrame(animarClique);
+        }
+
+        const galeriasSonhos = document.getElementById('sonhosGaleria');
+        let indiceSonhoAtivo = 0;
+        let trocaCardEmCurso = false;
+
+        function centralizarCard(card) {
+            if (!galeriasSonhos || !card) return;
+
+            const destino = card.offsetLeft - (galeriasSonhos.clientWidth - card.offsetWidth) / 2;
+            galeriasSonhos.scrollTo({ left: destino, behavior: 'smooth' });
+        }
+
+        function atualizarGaleriaSonhos() {
+            if (!galeriasSonhos) return;
+
+            const cards = [...galeriasSonhos.querySelectorAll('.dream-card')];
+
+            cards.forEach((card, index) => {
+                const selecionado = index === indiceSonhoAtivo;
+                card.classList.toggle('is-selected', selecionado);
+                card.style.opacity = selecionado ? '1' : '0.82';
+                card.style.filter = selecionado ? 'drop-shadow(0 16px 30px rgba(255, 117, 140, 0.35)) saturate(1.05)' : 'saturate(0.9)';
+            });
+        }
+
+        if (galeriasSonhos) {
+            const cards = [...galeriasSonhos.querySelectorAll('.dream-card')];
+
+            cards.forEach((card, index) => {
+                const textoCard = card.querySelector('.dream-card-text-scroll');
+
+                if (textoCard) {
+                    const barra = textoCard.querySelector('.dream-card-scrollbar');
+                    const puxador = textoCard.querySelector('.dream-card-scrollbar-thumb');
+                    const setaSuperior = textoCard.querySelector('.dream-card-scrollbar-up');
+                    const setaInferior = textoCard.querySelector('.dream-card-scrollbar-down');
+
+                    function atualizarPuxador() {
+                        if (!barra || !puxador) return;
+
+                        const proporcao = textoCard.clientHeight / textoCard.scrollHeight;
+                        const areaRolagem = Math.max(1, barra.clientHeight - 36);
+                        const altura = Math.max(32, areaRolagem * Math.min(1, proporcao));
+                        const limite = Math.max(0, areaRolagem - altura);
+                        const progresso = textoCard.scrollHeight > textoCard.clientHeight
+                            ? textoCard.scrollTop / (textoCard.scrollHeight - textoCard.clientHeight)
+                            : 0;
+
+                        puxador.style.height = `${altura}px`;
+                        puxador.style.transform = `translateY(${18 + limite * progresso}px)`;
+                        barra.hidden = false;
+                    }
+
+                    textoCard.addEventListener('scroll', atualizarPuxador, { passive: true });
+                    window.addEventListener('resize', atualizarPuxador);
+
+                    let inicioPuxadorY = 0;
+                    let inicioPuxadorScroll = 0;
+
+                    puxador.addEventListener('pointerdown', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        inicioPuxadorY = event.clientY;
+                        inicioPuxadorScroll = textoCard.scrollTop;
+                        puxador.setPointerCapture(event.pointerId);
+                    });
+
+                    puxador.addEventListener('pointermove', (event) => {
+                        if (!puxador.hasPointerCapture(event.pointerId)) return;
+
+                        const limite = Math.max(1, barra.clientHeight - 36 - puxador.offsetHeight);
+                        const proporcao = (textoCard.scrollHeight - textoCard.clientHeight) / limite;
+                        textoCard.scrollTop = inicioPuxadorScroll + (event.clientY - inicioPuxadorY) * proporcao;
+                        atualizarPuxador();
+                    });
+
+                    const soltarPuxador = (event) => {
+                        if (puxador.hasPointerCapture(event.pointerId)) {
+                            puxador.releasePointerCapture(event.pointerId);
+                        }
+                    };
+
+                    puxador.addEventListener('pointerup', soltarPuxador);
+                    puxador.addEventListener('pointercancel', soltarPuxador);
+
+                    setaSuperior.addEventListener('pointerdown', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        textoCard.scrollTop -= textoCard.clientHeight * 0.75;
+                        atualizarPuxador();
+                    });
+
+                    setaInferior.addEventListener('pointerdown', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        textoCard.scrollTop += textoCard.clientHeight * 0.75;
+                        atualizarPuxador();
+                    });
+
+                    let inicioRolagemY = 0;
+                    let inicioScrollTop = 0;
+
+                    textoCard.addEventListener('touchstart', (event) => {
+                        if (!event.touches.length) return;
+
+                        inicioRolagemY = event.touches[0].clientY;
+                        inicioScrollTop = textoCard.scrollTop;
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }, { passive: false });
+
+                    textoCard.addEventListener('touchmove', (event) => {
+                        if (!event.touches.length) return;
+
+                        const deslocamento = event.touches[0].clientY - inicioRolagemY;
+                        textoCard.scrollTop = inicioScrollTop - deslocamento;
+                        atualizarPuxador();
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }, { passive: false });
+
+                    textoCard.addEventListener('touchend', (event) => {
+                        event.stopPropagation();
+                    });
+
+                    textoCard.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                    });
+                    requestAnimationFrame(atualizarPuxador);
+                }
+
+                card.addEventListener('click', (event) => {
+                    // Interagir com o conteúdo da face traseira não deve virar o card.
+                    if (event.target.closest('.dream-card-text-scroll')) return;
+
+                    if (trocaCardEmCurso) return;
+
+                    if (index === indiceSonhoAtivo) {
+                        card.classList.toggle('is-flipped');
+                        centralizarCard(card);
+                        return;
+                    }
+
+                    const cardAnterior = cards[indiceSonhoAtivo];
+                    indiceSonhoAtivo = index;
+                    atualizarGaleriaSonhos();
+                    centralizarCard(card);
+
+                    trocaCardEmCurso = true;
+                    requestAnimationFrame(() => {
+                        card.classList.add('is-flipped');
+                        window.setTimeout(() => {
+                            if (cardAnterior) cardAnterior.classList.remove('is-flipped');
+                            trocaCardEmCurso = false;
+                        }, 450);
+                    });
+                });
+            });
+
+            atualizarGaleriaSonhos();
+        }
+
+        const raspadinhasGaleria = document.getElementById('raspadinhasGaleria');
+        const raspadinhaAnterior = document.getElementById('raspadinhaAnterior');
+        const raspadinhaProxima = document.getElementById('raspadinhaProxima');
+        const raspadinhas = raspadinhasGaleria ? [...raspadinhasGaleria.querySelectorAll('.raspadinha-card')] : [];
+        let raspadinhaAtiva = 0;
+
+        function prepararRaspadinha(card) {
+            const janela = card.querySelector('.raspadinha-janela');
+            const canvas = card.querySelector('.raspadinha-camada');
+            const contador = card.querySelector('.raspadinha-contador');
+            const contexto = canvas.getContext('2d');
+            const colunas = 20;
+            const linhas = 14;
+            const areasRaspadas = new Set();
+            let pressionando = false;
+            let revelado = 0;
+
+            function desenharCobertura() {
+                const escala = window.devicePixelRatio || 1;
+                canvas.width = janela.clientWidth * escala;
+                canvas.height = janela.clientHeight * escala;
+                contexto.setTransform(escala, 0, 0, escala, 0, 0);
+                const largura = janela.clientWidth;
+                const altura = janela.clientHeight;
+                const cobertura = contexto.createLinearGradient(0, 0, largura, altura);
+                cobertura.addColorStop(0, '#f5b4cc');
+                cobertura.addColorStop(0.45, '#c87899');
+                cobertura.addColorStop(1, '#8c4d6b');
+                contexto.globalCompositeOperation = 'source-over';
+                contexto.fillStyle = cobertura;
+                contexto.fillRect(0, 0, largura, altura);
+                contexto.fillStyle = 'rgba(255, 235, 245, 0.3)';
+                contexto.font = '700 18px Montserrat, sans-serif';
+                contexto.textAlign = 'center';
+                contexto.fillText('Raspe para descobrir', largura / 2, altura / 2);
+            }
+
+            function atualizarRevelacao(x, y) {
+                const largura = janela.clientWidth;
+                const altura = janela.clientHeight;
+                const raio = 25;
+                contexto.globalCompositeOperation = 'destination-out';
+                contexto.beginPath();
+                contexto.arc(x, y, raio, 0, Math.PI * 2);
+                contexto.fill();
+
+                const colunaInicial = Math.max(0, Math.floor((x - raio) / largura * colunas));
+                const colunaFinal = Math.min(colunas - 1, Math.floor((x + raio) / largura * colunas));
+                const linhaInicial = Math.max(0, Math.floor((y - raio) / altura * linhas));
+                const linhaFinal = Math.min(linhas - 1, Math.floor((y + raio) / altura * linhas));
+
+                for (let linha = linhaInicial; linha <= linhaFinal; linha++) {
+                    for (let coluna = colunaInicial; coluna <= colunaFinal; coluna++) {
+                        const centroX = (coluna + 0.5) * largura / colunas;
+                        const centroY = (linha + 0.5) * altura / linhas;
+                        if (Math.hypot(centroX - x, centroY - y) <= raio) {
+                            areasRaspadas.add(`${coluna}:${linha}`);
+                        }
+                    }
+                }
+
+                revelado = Math.round(areasRaspadas.size / (colunas * linhas) * 100);
+                contador.textContent = `${revelado}% revelado`;
+                if (revelado >= 60 && !card.classList.contains('revelada')) {
+                    card.classList.add('revelada');
+                    contador.textContent = 'Descoberto';
+
+                    // Após o fade de saída, retire o canvas da composição por completo.
+                    // Isso preserva a imagem e os textos sem qualquer camada sobreposta.
+                    window.setTimeout(() => {
+                        canvas.style.display = 'none';
+                    }, 800);
+                }
+            }
+
+            function obterPosicao(evento) {
+                const limite = janela.getBoundingClientRect();
+                return {
+                    x: evento.clientX - limite.left,
+                    y: evento.clientY - limite.top
+                };
+            }
+
+            janela.addEventListener('pointerdown', (evento) => {
+                pressionando = true;
+                janela.setPointerCapture(evento.pointerId);
+                const posicao = obterPosicao(evento);
+                atualizarRevelacao(posicao.x, posicao.y);
+            });
+
+            janela.addEventListener('pointermove', (evento) => {
+                if (!pressionando || card.classList.contains('revelada')) return;
+                const posicao = obterPosicao(evento);
+                atualizarRevelacao(posicao.x, posicao.y);
+            });
+
+            janela.addEventListener('pointerup', () => { pressionando = false; });
+            janela.addEventListener('pointercancel', () => { pressionando = false; });
+            window.addEventListener('resize', desenharCobertura);
+            card.redesenharRaspadinha = desenharCobertura;
+            desenharCobertura();
+        }
+
+        function mostrarRaspadinha(indice) {
+            raspadinhaAtiva = (indice + raspadinhas.length) % raspadinhas.length;
+            raspadinhas.forEach((card, index) => {
+                card.classList.toggle('ativa', index === raspadinhaAtiva);
+            });
+            const cardAtivo = raspadinhas[raspadinhaAtiva];
+            if (cardAtivo && cardAtivo.redesenharRaspadinha) {
+                requestAnimationFrame(cardAtivo.redesenharRaspadinha);
+            }
+        }
+
+        if (raspadinhas.length) {
+            raspadinhas.forEach(prepararRaspadinha);
+            mostrarRaspadinha(0);
+            raspadinhaAnterior.addEventListener('click', () => mostrarRaspadinha(raspadinhaAtiva - 1));
+            raspadinhaProxima.addEventListener('click', () => mostrarRaspadinha(raspadinhaAtiva + 1));
+        }
+
+        window.addEventListener('load', () => {
+            renderizarLinhaTempo(0); 
+        });
+
+        const conteudos = document.querySelectorAll('.conteudo-secao');
+        const configuringObserver = {
+            root: null,
+            threshold: 0.15, 
+            rootMargin: "0px"
+        };
+
+        const observador = new IntersectionObserver(function(entradas, observador) {
+            entradas.forEach(entrada => {
+                if (entrada.isIntersecting) {
+                    const containerElemento = entrada.target;
+                    containerElemento.classList.add('titulo-visivel');
+                    
+                    setTimeout(() => {
+                        containerElemento.classList.add('corpo-visivel');
+                    }, 400);
+                    
+                    observador.unobserve(containerElemento);
+                }
+            });
+        }, configuringObserver);
+
+        conteudos.forEach(conteudo => {
+            observador.observe(conteudo);
+        });
+    </script>
+</body>
+</html>
