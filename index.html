@@ -26,9 +26,9 @@
     }
     .game-container {
       position: relative;
-      width: min(100vw, calc(100dvh * 16 / 9));
-      height: min(100dvh, calc(100vw * 9 / 16));
-      aspect-ratio: 16 / 9;
+      width: min(100vw, calc(100dvh * 20 / 9));
+      height: min(100dvh, calc(100vw * 9 / 20));
+      aspect-ratio: 20 / 9;
       container-type: size;
     }
     canvas {
@@ -251,7 +251,7 @@
 <body>
 
 <div class="game-container">
-  <canvas id="gameCanvas" width="800" height="450"></canvas>
+  <canvas id="gameCanvas" width="1000" height="450"></canvas>
   <div class="tela-inicial" id="telaInicial">
     <button class="btn-iniciar" id="btnIniciar" type="button">START</button>
   </div>
@@ -407,12 +407,11 @@ async function solicitarPaisagem() {
 async function iniciarJogo() {
   await solicitarPaisagem();
   telaInicial.classList.add('iniciada');
-  tutorialVisivel = false;
+  tutorialVisivel = true;
   tutorialTempoInicio = null;
   contagemInicio = 0;
   telaInicialAtiva = false;
-  jogoIniciado = true;
-  musicaTema.play().catch(() => {});
+  jogoIniciado = false;
 }
 
 btnIniciar.addEventListener('click', iniciarJogo, { once: true });
