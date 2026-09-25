@@ -2,8 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <!-- Mantém a escala do mural fixa em aparelhos móveis. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nosso Mural Especial💝</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
@@ -22,7 +21,6 @@
             --progresso-barra: 0%; /* Controla o preenchimento rosa da barra */
             --altura-viewport: 100dvh;
             --largura-viewport: 100vw;
-            --largura-mural: 100vw;
             --altura-mural: 68dvh;
         }
 
@@ -44,32 +42,6 @@
             overflow-x: hidden;
             opacity: 0;
             animation: fadeEntrada 3s ease forwards;
-        }
-
-        @media (pointer: coarse) {
-            body,
-            body * {
-                -webkit-user-select: none;
-                user-select: none;
-            }
-
-            body.selecao-liberada,
-            body.selecao-liberada * {
-                -webkit-user-select: text;
-                user-select: text;
-            }
-
-            body .dream-card-text-scroll,
-            body .dream-card-text-scroll p {
-                -webkit-user-select: none;
-                user-select: none;
-            }
-
-            body.selecao-liberada .dream-card-text-scroll,
-            body.selecao-liberada .dream-card-text-scroll p {
-                -webkit-user-select: text;
-                user-select: text;
-            }
         }
 
         @keyframes fadeEntrada {
@@ -995,40 +967,7 @@
         }
 
         @media (max-width: 768px) {
-                /* O conteúdo acompanha a largura real da tela durante a rolagem.
-                    A altura do viewport não pode alterar o recorte horizontal. */
-            html {
-                background-color: var(--cor-fundo);
-            }
-
-            body {
-                width: 100vw;
-                max-width: 100vw;
-                margin-inline: 0;
-                overflow-x: hidden;
-                touch-action: pan-y;
-                overscroll-behavior-x: none;
-            }
-
-            .mural-wrapper,
-            .secao-mural,
-            footer {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            .secao-mural {
-                min-height: 100svh;
-                padding: 80px 20px 100px;
-            }
-
-            .conteudo-secao,
-            .conteudo-secao.secao-historia-layout {
-                width: 100%;
-                max-width: 100%;
-                min-width: 0;
-            }
-
+            .secao-mural { padding: 80px 20px 100px 20px; }
             .conteudo-historia { height: auto; min-height: 750px; }
             .bloco-ano { position: relative; flex-direction: column; align-items: center; gap: 25px; opacity: 0; display: none; }
             .bloco-ano.ativo { display: flex; opacity: 1; }
@@ -1042,18 +981,9 @@
             .sonhos-galeria { gap: 12px; overflow-x: auto; justify-content: flex-start; }
             .dream-card { width: 200px; min-width: 200px; height: 320px; }
             .dream-card.is-selected { width: 260px; min-width: 260px; height: 380px; }
-            .raspadinhas-area {
-                display: grid;
-                grid-template-columns: 38px minmax(0, 1fr) 38px;
-                gap: 8px;
-                align-items: center;
-            }
+            .raspadinhas-area { gap: 8px; }
             .raspadinha-navegacao { width: 38px; height: 38px; flex-basis: 38px; font-size: 1.5rem; }
-            .raspadinhas-galeria {
-                width: 100%;
-                min-width: 0;
-                min-height: 440px;
-            }
+            .raspadinhas-galeria { min-height: 440px; }
             .raspadinha-card { min-height: 440px; padding: 16px; }
             .raspadinha-janela { height: 290px; }
             .playlists-area { grid-template-columns: 1fr; }
@@ -1338,7 +1268,6 @@
             }
 
             .raspadinhas-area {
-                grid-template-columns: 34px minmax(0, 1fr) 34px;
                 gap: 6px;
             }
 
@@ -1478,8 +1407,6 @@
                 width: 100vw;
                 margin-left: calc(50% - 50vw);
                 margin-right: calc(50% - 50vw);
-                padding-left: 60px;
-                padding-right: 60px;
             }
 
             img,
@@ -1793,11 +1720,9 @@
             const largura = viewport ? viewport.width : window.innerWidth;
             const altura = viewport ? viewport.height : window.innerHeight;
             const raiz = document.documentElement;
-            const larguraMural = Math.min(largura, altura * 9 / 20);
 
             raiz.style.setProperty('--largura-viewport', `${largura}px`);
             raiz.style.setProperty('--altura-viewport', `${altura}px`);
-            raiz.style.setProperty('--largura-mural', `${larguraMural}px`);
             raiz.style.setProperty('--altura-mural', `${altura * 0.68}px`);
         }
 
@@ -1805,56 +1730,6 @@
         window.addEventListener('resize', atualizarViewport, { passive: true });
         window.addEventListener('orientationchange', atualizarViewport, { passive: true });
         window.visualViewport?.addEventListener('resize', atualizarViewport, { passive: true });
-
-        // Alguns navegadores iOS não respeitam completamente `user-scalable=no`.
-        // Estes eventos complementam a meta tag sem bloquear a rolagem normal de um dedo.
-        document.addEventListener('gesturestart', (event) => event.preventDefault(), { passive: false });
-        document.addEventListener('gesturechange', (event) => event.preventDefault(), { passive: false });
-        document.addEventListener('gestureend', (event) => event.preventDefault(), { passive: false });
-        document.addEventListener('touchmove', (event) => {
-            if (event.touches.length > 1) event.preventDefault();
-        }, { passive: false });
-
-        const DURACAO_TOQUE_LONGO_MS = 500;
-        let temporizadorSelecao = null;
-        let selecaoLiberadaPorToque = false;
-
-        function obterTextoPressionado(alvo) {
-            const elemento = alvo.closest('p, h1, h2, h3, h4, h5, h6, span, footer');
-            if (!elemento || elemento.closest('button, a, input, canvas, iframe, [role="button"]')) {
-                return null;
-            }
-            return elemento;
-        }
-
-        document.addEventListener('touchstart', (event) => {
-            if (event.touches.length !== 1) return;
-
-            const texto = obterTextoPressionado(event.target);
-            if (!texto) return;
-
-            window.clearTimeout(temporizadorSelecao);
-            document.body.classList.remove('selecao-liberada');
-            selecaoLiberadaPorToque = false;
-            temporizadorSelecao = window.setTimeout(() => {
-                document.body.classList.add('selecao-liberada');
-                selecaoLiberadaPorToque = true;
-            }, DURACAO_TOQUE_LONGO_MS);
-        }, { passive: true });
-
-        document.addEventListener('touchend', () => {
-            window.clearTimeout(temporizadorSelecao);
-            if (!selecaoLiberadaPorToque) {
-                document.body.classList.remove('selecao-liberada');
-            }
-            selecaoLiberadaPorToque = false;
-        }, { passive: true });
-
-        document.addEventListener('touchcancel', () => {
-            window.clearTimeout(temporizadorSelecao);
-            document.body.classList.remove('selecao-liberada');
-            selecaoLiberadaPorToque = false;
-        }, { passive: true });
 
         function rolarParaProximaSecao(botao) {
             const secaoAtual = botao.closest('.secao-mural');
@@ -2057,12 +1932,12 @@
 
                         inicioRolagemY = event.touches[0].clientY;
                         inicioScrollTop = textoCard.scrollTop;
+                        event.preventDefault();
                         event.stopPropagation();
                     }, { passive: false });
 
                     textoCard.addEventListener('touchmove', (event) => {
                         if (!event.touches.length) return;
-                        if (document.body.classList.contains('selecao-liberada')) return;
 
                         const deslocamento = event.touches[0].clientY - inicioRolagemY;
                         textoCard.scrollTop = inicioScrollTop - deslocamento;
