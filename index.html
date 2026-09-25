@@ -292,6 +292,9 @@ playerIdleSprite.src = 'jogo/tulio.png';
 const playerRunSprite = new Image();
 playerRunSprite.src = 'jogo/runsprite2.png';
 
+const playerJumpSprite = new Image();
+playerJumpSprite.src = 'jogo/tulio_salto.png';
+
 const princesaSprite = new Image();
 princesaSprite.src = 'jogo/camille.png';
 
@@ -1043,8 +1046,11 @@ function draw(timestamp) {
     ctx.save();
     ctx.globalAlpha = pedidoIniciado ? 1 - pedidoFadeAlpha : 1;
     
-    const estaCorrendo = Math.abs(player.vx) > 0.1 && !player.jumping;
-    const spriteAtual = estaCorrendo ? playerRunSprite : playerIdleSprite;
+    const estaSaltando = player.jumping;
+    const estaCorrendo = Math.abs(player.vx) > 0.1 && !estaSaltando;
+    const spriteAtual = estaSaltando
+      ? playerJumpSprite
+      : estaCorrendo ? playerRunSprite : playerIdleSprite;
 
     if (spriteAtual.complete && spriteAtual.naturalWidth !== 0) {
       
@@ -1059,7 +1065,30 @@ function draw(timestamp) {
       const drawX = player.x - (drawWidth - player.width) / 2;
       const drawY = player.y - (drawHeight - player.height);
 
-      if (estaCorrendo) {
+      if (estaSaltando) {
+        const fatorLarguraSalto = 1.4;
+        const fatorAlturaSalto = 1.25;
+        const larguraSalto = player.width * fatorLarguraSalto;
+        const alturaSalto = player.height * fatorAlturaSalto;
+        const inclinacao = player.direcao === -1 ? -0.14 : 0.14;
+        const centroX = Math.floor(player.x + player.width / 2);
+        const baseY = Math.floor(player.y + player.height);
+
+        ctx.translate(centroX, baseY);
+        ctx.rotate(inclinacao);
+        if (player.direcao === -1) ctx.scale(-1, 1);
+        ctx.drawImage(
+          spriteAtual,
+          0,
+          0,
+          spriteAtual.naturalWidth,
+          spriteAtual.naturalHeight,
+          -larguraSalto / 2,
+          -alturaSalto,
+          larguraSalto,
+          alturaSalto
+        );
+      } else if (estaCorrendo) {
         const srcX = player.frameIndex * player.frameWidth;
 
         if (player.direcao === -1) {
