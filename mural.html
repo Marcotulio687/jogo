@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Mantém a escala do mural fixa em aparelhos móveis. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Nosso Mural Especial💝</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
@@ -21,6 +22,7 @@
             --progresso-barra: 0%; /* Controla o preenchimento rosa da barra */
             --altura-viewport: 100dvh;
             --largura-viewport: 100vw;
+            --largura-mural: 100vw;
             --altura-mural: 68dvh;
         }
 
@@ -967,6 +969,20 @@
         }
 
         @media (max-width: 768px) {
+            /* O mural ocupa sempre o maior quadro 9:20 que couber na tela.
+               Em telas mais largas, as laterais ficam como margem de fundo. */
+            html {
+                background-color: var(--cor-fundo);
+            }
+
+            body {
+                width: var(--largura-mural);
+                margin-inline: auto;
+                overflow-x: clip;
+                touch-action: pan-y;
+                overscroll-behavior-x: none;
+            }
+
             .secao-mural { padding: 80px 20px 100px 20px; }
             .conteudo-historia { height: auto; min-height: 750px; }
             .bloco-ano { position: relative; flex-direction: column; align-items: center; gap: 25px; opacity: 0; display: none; }
@@ -1404,9 +1420,9 @@
             /* A galeria é propositalmente "full bleed": os cards podem chegar
                até as laterais da tela, sem serem cortados pelas margens da seção. */
             .sonhos-galeria {
-                width: 100vw;
-                margin-left: calc(50% - 50vw);
-                margin-right: calc(50% - 50vw);
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
             }
 
             img,
