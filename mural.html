@@ -46,6 +46,32 @@
             animation: fadeEntrada 3s ease forwards;
         }
 
+        @media (pointer: coarse) {
+            body,
+            body * {
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            body.selecao-liberada,
+            body.selecao-liberada * {
+                -webkit-user-select: text;
+                user-select: text;
+            }
+
+            body .dream-card-text-scroll,
+            body .dream-card-text-scroll p {
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            body.selecao-liberada .dream-card-text-scroll,
+            body.selecao-liberada .dream-card-text-scroll p {
+                -webkit-user-select: text;
+                user-select: text;
+            }
+        }
+
         @keyframes fadeEntrada {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -1736,9 +1762,11 @@
             const largura = viewport ? viewport.width : window.innerWidth;
             const altura = viewport ? viewport.height : window.innerHeight;
             const raiz = document.documentElement;
+            const larguraMural = Math.min(largura, altura * 9 / 20);
 
             raiz.style.setProperty('--largura-viewport', `${largura}px`);
             raiz.style.setProperty('--altura-viewport', `${altura}px`);
+            raiz.style.setProperty('--largura-mural', `${larguraMural}px`);
             raiz.style.setProperty('--altura-mural', `${altura * 0.68}px`);
         }
 
@@ -1746,6 +1774,56 @@
         window.addEventListener('resize', atualizarViewport, { passive: true });
         window.addEventListener('orientationchange', atualizarViewport, { passive: true });
         window.visualViewport?.addEventListener('resize', atualizarViewport, { passive: true });
+
+        // Alguns navegadores iOS não respeitam completamente `user-scalable=no`.
+        // Estes eventos complementam a meta tag sem bloquear a rolagem normal de um dedo.
+        document.addEventListener('gesturestart', (event) => event.preventDefault(), { passive: false });
+        document.addEventListener('gesturechange', (event) => event.preventDefault(), { passive: false });
+        document.addEventListener('gestureend', (event) => event.preventDefault(), { passive: false });
+        document.addEventListener('touchmove', (event) => {
+            if (event.touches.length > 1) event.preventDefault();
+        }, { passive: false });
+
+        const DURACAO_TOQUE_LONGO_MS = 500;
+        let temporizadorSelecao = null;
+        let selecaoLiberadaPorToque = false;
+
+        function obterTextoPressionado(alvo) {
+            const elemento = alvo.closest('p, h1, h2, h3, h4, h5, h6, span, footer');
+            if (!elemento || elemento.closest('button, a, input, canvas, iframe, [role="button"]')) {
+                return null;
+            }
+            return elemento;
+        }
+
+        document.addEventListener('touchstart', (event) => {
+            if (event.touches.length !== 1) return;
+
+            const texto = obterTextoPressionado(event.target);
+            if (!texto) return;
+
+            window.clearTimeout(temporizadorSelecao);
+            document.body.classList.remove('selecao-liberada');
+            selecaoLiberadaPorToque = false;
+            temporizadorSelecao = window.setTimeout(() => {
+                document.body.classList.add('selecao-liberada');
+                selecaoLiberadaPorToque = true;
+            }, DURACAO_TOQUE_LONGO_MS);
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            window.clearTimeout(temporizadorSelecao);
+            if (!selecaoLiberadaPorToque) {
+                document.body.classList.remove('selecao-liberada');
+            }
+            selecaoLiberadaPorToque = false;
+        }, { passive: true });
+
+        document.addEventListener('touchcancel', () => {
+            window.clearTimeout(temporizadorSelecao);
+            document.body.classList.remove('selecao-liberada');
+            selecaoLiberadaPorToque = false;
+        }, { passive: true });
 
         function rolarParaProximaSecao(botao) {
             const secaoAtual = botao.closest('.secao-mural');
@@ -1948,12 +2026,12 @@
 
                         inicioRolagemY = event.touches[0].clientY;
                         inicioScrollTop = textoCard.scrollTop;
-                        event.preventDefault();
                         event.stopPropagation();
                     }, { passive: false });
 
                     textoCard.addEventListener('touchmove', (event) => {
                         if (!event.touches.length) return;
+                        if (document.body.classList.contains('selecao-liberada')) return;
 
                         const deslocamento = event.touches[0].clientY - inicioRolagemY;
                         textoCard.scrollTop = inicioScrollTop - deslocamento;
