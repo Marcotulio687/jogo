@@ -1002,14 +1002,33 @@
             }
 
             body {
-                width: var(--largura-mural);
+                width: min(100vw, calc(100svh * 9 / 20));
+                max-width: 100vw;
                 margin-inline: auto;
                 overflow-x: clip;
                 touch-action: pan-y;
                 overscroll-behavior-x: none;
             }
 
-            .secao-mural { padding: 80px 20px 100px 20px; }
+            .mural-wrapper,
+            .secao-mural,
+            footer {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .secao-mural {
+                min-height: 100svh;
+                padding: 80px 20px 100px;
+            }
+
+            .conteudo-secao,
+            .conteudo-secao.secao-historia-layout {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+            }
+
             .conteudo-historia { height: auto; min-height: 750px; }
             .bloco-ano { position: relative; flex-direction: column; align-items: center; gap: 25px; opacity: 0; display: none; }
             .bloco-ano.ativo { display: flex; opacity: 1; }
