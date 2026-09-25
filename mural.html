@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Nosso Mural Especial💝</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
@@ -33,6 +33,7 @@
 
         html {
             scroll-behavior: smooth;
+            overscroll-behavior-x: none;
         }
 
         body {
@@ -1383,6 +1384,8 @@
 
             body {
                 min-height: var(--altura-viewport);
+                width: 100%;
+                aspect-ratio: 9 / 20;
             }
 
             .mural-wrapper {
@@ -1730,6 +1733,17 @@
         window.addEventListener('resize', atualizarViewport, { passive: true });
         window.addEventListener('orientationchange', atualizarViewport, { passive: true });
         window.visualViewport?.addEventListener('resize', atualizarViewport, { passive: true });
+
+        function bloquearZoomMultitoque(evento) {
+            if (evento.touches.length > 1) {
+                evento.preventDefault();
+            }
+        }
+
+        document.addEventListener('touchmove', bloquearZoomMultitoque, { passive: false });
+        document.addEventListener('gesturestart', (evento) => evento.preventDefault(), { passive: false });
+        document.addEventListener('gesturechange', (evento) => evento.preventDefault(), { passive: false });
+        document.addEventListener('gestureend', (evento) => evento.preventDefault(), { passive: false });
 
         function rolarParaProximaSecao(botao) {
             const secaoAtual = botao.closest('.secao-mural');
